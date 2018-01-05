@@ -10,6 +10,10 @@ public class Constants {
 
     public interface APP {
         public final static String TITLE = "Sparrow Board Game Server";
+    }
+
+    public interface VIEW {
         public final static Color COLOR_SYSTEM_GRAY = Color.getHSBColor(0.0F, 0.0F, 0.93333334F);
+        public final static String BOARD_TEXT_FONT = "Calibri";
     }
 }

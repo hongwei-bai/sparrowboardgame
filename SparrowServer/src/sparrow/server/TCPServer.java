@@ -15,12 +15,14 @@ public class TCPServer {
     private final static int DEFAULT_CLIENT_NUMBER = 2;
     private final static int ERROR = -1;
     private ClientObserver mClientObserver = null;
+    private int mClientNumber;
 
     public TCPServer() {
         mClientThreads = new ClientThread[DEFAULT_CLIENT_NUMBER];
     }
 
     public TCPServer(int clientNumber) {
+        mClientNumber = clientNumber;
         mClientThreads = new ClientThread[clientNumber];
     }
 
@@ -93,5 +95,9 @@ public class TCPServer {
             index++;
         }
         return ERROR;
+    }
+
+    public int getClientNumber() {
+        return mClientNumber;
     }
 }
