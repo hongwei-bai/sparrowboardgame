@@ -175,6 +175,10 @@ public class TCPServer {
         return mClientNumber;
     }
 
+    public String getClientName(int clientId) {
+        return mClientNames[clientId];
+    }
+
     public void releaseAllClientsResource() {
         for (int i = 0; i < mClientNumber; i++) {
             releaseClientResource(i);
