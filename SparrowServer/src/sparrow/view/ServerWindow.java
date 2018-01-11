@@ -64,6 +64,7 @@ public class ServerWindow extends JFrame {
         mPlayerNumber = FiveBoard.getPlayerNumber();
         mTcpServer = new TCPServer(mPlayerNumber);
         mFiveModel = new FiveModel();
+        Dispatcher.getInstance().setPlayerNumber(mPlayerNumber);
         Dispatcher.getInstance().setModel(mFiveModel);
         Dispatcher.getInstance().setTCPServer(mTcpServer);
     }
@@ -73,7 +74,7 @@ public class ServerWindow extends JFrame {
 
             @Override
             public void onTakeOver(int player) {
-                mFiveBoard.setTakeOver(player);
+                Dispatcher.getInstance().setTakeOver(player);
             }
 
             @Override

@@ -7,14 +7,15 @@ public class MultiLanguage {
 
     public interface BUTTON {
         public static final String TAKE_OVER = "TakeOver";
-        public static final String PAUSE = "Pause";
-        public static final String RESUME = "Resume";
+        public static final String PAUSE = "||";
+        public static final String RESUME = "|>";
         public static final String NEXT_STEP = ">";
     }
 
     public interface GAME_STATUS {
         public static final String GAME_PRE = "Game: ";
         public static final String READY = "Ready";
+        public static final String STARTED = "Started";
         public static final String CLIENT_ERROR = "Client Error!";
         public static final String GAME_OVER = "Game Over";
         public static final String WIN = "Win!";

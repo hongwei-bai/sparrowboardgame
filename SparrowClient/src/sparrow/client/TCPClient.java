@@ -43,15 +43,16 @@ public class TCPClient {
 
             while (true) {
                 String message = br.readLine();
-                Log.d(message);
                 if (message != null) {
-                    MessageBox.postMessage("received message: " + message);
-                    Log.d("received message: " + message);
+                    MessageBox.postMessage("rcv: " + message);
+                    Log.d("rcv: " + message);
 
                     ParseSession session = new ParseSession();
                     session.readMessage(mParser, message);
                     int move[] = mPlayerImpl.move(session.getSN(), session.getColor(),
                             session.getBoard(), session.getPreviousMove());
+                    Log.d("mov: " + move[0] + "," + move[1]);
+                    Log.d("");
                     String reply = Protocol.buildMessage().setMessageId(MSGID.MOVE).addMove(move)
                             .getMessage();
                     MessageBox.postMessage(reply);
@@ -87,5 +88,9 @@ public class TCPClient {
                 }
             }
         }
+    }
+
+    public String getClientName() {
+        return mPlayerImpl.getPlayerName();
     }
 }

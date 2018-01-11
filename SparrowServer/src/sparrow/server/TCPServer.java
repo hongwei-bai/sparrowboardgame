@@ -25,11 +25,11 @@ public class TCPServer {
     private ClientObserver mClientObserver = null;
     private int mClientNumber;
     private boolean mGameStart = false;
-    private int mConnectedClientCount = 0;
     private BufferedReader[] mBufferedReaders = null;
     private BufferedWriter[] mBufferedWriters = null;
     private String[] mClientNames = null;
     private ProtocolParser mProtocolParser = null;
+    private boolean[] mClientTakeOver = null;
 
     public TCPServer() {
         initClients(DEFAULT_CLIENT_NUMBER);
@@ -45,16 +45,13 @@ public class TCPServer {
         mBufferedReaders = new BufferedReader[clientNumber];
         mBufferedWriters = new BufferedWriter[clientNumber];
         mClientNames = new String[clientNumber];
+        mClientTakeOver = new boolean[clientNumber];
     }
 
     public interface ClientObserver {
-        public void onClientConnected(int clientId);
+        public void onClientConnected(int clientId, String clientName);
 
         public void onClientDisconnected(int clientId);
-
-        public void onAllClientReady();
-
-        public void onMinimumClientNumberFulfiled();
     }
 
     public void setClientObserver(ClientObserver o) {
@@ -81,14 +78,6 @@ public class TCPServer {
                     mClientSockets[index] = socket;
                     processConnectRespond(index);
                     ControlPanel.postMessage("Client " + index + " connected.");
-                    mConnectedClientCount++;
-                    if (mConnectedClientCount == mClientNumber) {
-                        mGameStart = true;
-                        ControlPanel.postMessage("All players are ready. Game start.");
-                        if (mClientObserver != null) {
-                            mClientObserver.onAllClientReady();
-                        }
-                    }
                 } else {
                     ControlPanel.postMessage(MultiLanguage.ERROR.CLIENT_NUMBER_OVERFLOW);
                 }
@@ -98,6 +87,10 @@ public class TCPServer {
         } finally {
 
         }
+    }
+
+    public void setGameStart() {
+        mGameStart = true;
     }
 
     private void processConnectRespond(int clientId) {
@@ -111,7 +104,9 @@ public class TCPServer {
                 if (mProtocolParser.getMessageId(message).equals(Protocol.MSGID.CONNECTION)) {
                     String playerName = mProtocolParser.getValue(message, Protocol.KEY.PLAYER_NAME);
                     mClientNames[clientId] = playerName;
-                    ControlPanel.setPlayerName(clientId, playerName);
+                    if (mClientObserver != null) {
+                        mClientObserver.onClientConnected(clientId, playerName);
+                    }
                     return;
                 }
             } catch (IOException e) {
@@ -160,10 +155,14 @@ public class TCPServer {
         return null;
     }
 
+    public void setTakeOver(int clientId) {
+        mClientTakeOver[clientId] = true;
+    }
+
     private int allocateClientThread() {
         int index = mCurrentClientIndex + 1;
         while (index != mCurrentClientIndex) {
-            if (null == mClientSockets[index]) {
+            if (null == mClientSockets[index] && !mClientTakeOver[index]) {
                 mCurrentClientIndex = index;
                 return index;
             }

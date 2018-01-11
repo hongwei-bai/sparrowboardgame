@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import sparrow.client.TCPClient;
@@ -28,7 +29,9 @@ public class ClientWindow extends JFrame {
         setContentPane(content);
         content.setLayout(new BoxLayout(content, BoxLayout.PAGE_AXIS));
         JTextArea jTextArea = new JTextArea();
-        content.add(jTextArea);
+        jTextArea.setLineWrap(true);
+        JScrollPane jScrollPane = new JScrollPane(jTextArea);
+        content.add(jScrollPane);
         MessageBox.getInstance().setMessageBox(jTextArea);
         setPreferredSize(new Dimension(600, 400));
         setCenterDisplay();

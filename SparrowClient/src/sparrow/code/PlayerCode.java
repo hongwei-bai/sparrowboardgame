@@ -1,7 +1,6 @@
 package sparrow.code;
 
 import sparrow.platform.PlayerInterface;
-import sparrow.util.Log;
 
 public class PlayerCode implements PlayerInterface {
 
@@ -13,7 +12,16 @@ public class PlayerCode implements PlayerInterface {
             return m;
         }
 
-        Log.d("haha");
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (0 == board[i][j]) {
+                    m[0] = i;
+                    m[1] = j;
+                    return m;
+                }
+            }
+        }
+
         return m;
     }
 
