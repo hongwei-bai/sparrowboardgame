@@ -9,61 +9,59 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import sparrow.code.PlayerCode;
-import sparrow.constants.Protocol;
+import sparrow.platform.ParseSession;
 import sparrow.platform.PlayerInterface;
+import sparrow.protocol.Protocol;
+import sparrow.protocol.Protocol.MSGID;
+import sparrow.protocol.ProtocolParser;
+import sparrow.util.Log;
 import sparrow.view.MessageBox;
 
 public class TCPClient {
-    private String mPlayerName = null;
-    private Socket mSocket = null;
     private PlayerInterface mPlayerImpl = null;
+    private ProtocolParser mParser;
 
-    public TCPClient(String playerName) {
-        mPlayerName = playerName;
+    public TCPClient(ProtocolParser p) {
+        mParser = p;
         mPlayerImpl = new PlayerCode();
     }
 
     public void connect(String host, int port) {
-        BufferedWriter bw = null;
-        try {
-            mSocket = new Socket(host, port);
-            bw = new BufferedWriter(new OutputStreamWriter(mSocket.getOutputStream()));
-            bw.write(Protocol.MSGID.CONNECTION
-                    + Protocol.buildPairString(Protocol.KEY.PLAYER_NAME, mPlayerName));
-            bw.newLine();
-            bw.flush();
-            MessageBox.postMessage("connected");
-            loop();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            closeSocket();
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void loop() {
+        Socket socket = null;
         BufferedReader br = null;
         BufferedWriter bw = null;
         try {
-            br = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
-            bw = new BufferedWriter(new OutputStreamWriter(mSocket.getOutputStream()));
+            socket = new Socket(host, port);
+            bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String messageOut = Protocol.buildMessage().setMessageId(MSGID.CONNECTION)
+                    .addPlayerName(mPlayerImpl.getPlayerName()).getMessage();
+            bw.write(messageOut);
+            bw.newLine();
+            bw.flush();
+            MessageBox.postMessage("connected");
+
             while (true) {
                 String message = br.readLine();
-                MessageBox.postMessage("received message: " + message);
-                String reply = mPlayerImpl.move(message);
-                bw.write(Protocol.MSGID.PLAYER_MOVE + reply);
-                bw.newLine();
-                bw.flush();
+                Log.d(message);
+                if (message != null) {
+                    MessageBox.postMessage("received message: " + message);
+                    Log.d("received message: " + message);
+
+                    ParseSession session = new ParseSession();
+                    session.readMessage(mParser, message);
+                    int move[] = mPlayerImpl.move(session.getSN(), session.getColor(),
+                            session.getBoard(), session.getPreviousMove());
+                    String reply = Protocol.buildMessage().setMessageId(MSGID.MOVE).addMove(move)
+                            .getMessage();
+                    MessageBox.postMessage(reply);
+                    bw.write(reply);
+                    bw.newLine();
+                    bw.flush();
+                }
             }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -81,22 +79,13 @@ public class TCPClient {
                     e.printStackTrace();
                 }
             }
-        }
-    }
-
-    private void closeSocket() {
-        if (mSocket != null && !mSocket.isClosed()) {
-            try {
-                mSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (socket != null && !socket.isClosed()) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        closeSocket();
-        super.finalize();
     }
 }

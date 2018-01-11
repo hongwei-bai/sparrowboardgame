@@ -10,6 +10,7 @@ import javax.swing.JTextArea;
 
 import sparrow.client.TCPClient;
 import sparrow.constants.Constants;
+import sparrow.protocol.FiveProtocol;
 
 public class ClientWindow extends JFrame {
     private static final long serialVersionUID = 8093757172462558425L;
@@ -38,7 +39,7 @@ public class ClientWindow extends JFrame {
     }
 
     public void initModel() {
-        mTcpClient = new TCPClient("Pl1");
+        mTcpClient = new TCPClient(new FiveProtocol());
         mTcpClient.connect("localhost", Constants.TCP.SERVER_LISTEN_PORT);
     }
 

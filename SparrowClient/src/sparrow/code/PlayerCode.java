@@ -6,9 +6,15 @@ import sparrow.util.Log;
 public class PlayerCode implements PlayerInterface {
 
     @Override
-    public String move(String input) {
+    public int[] move(int sn, int color, int[][] board, int[] prev) {
+        int[] m = new int[2];
+        if (sn == 1) {
+            m[0] = m[1] = 7;
+            return m;
+        }
+
         Log.d("haha");
-        return null;
+        return m;
     }
 
     @Override

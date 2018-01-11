@@ -2,10 +2,13 @@ package sparrow.view;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import sparrow.constants.Constants;
+import sparrow.five.FiveBoard;
+import sparrow.five.FiveModel;
+import sparrow.model.Dispatcher;
+import sparrow.protocol.FiveProtocol;
 import sparrow.server.TCPServer;
 import sparrow.view.ControlPanel.PlayerButtonObserver;
 
@@ -22,11 +25,13 @@ public class ServerWindow extends JFrame {
     private int mPlayerNumber = 0;
     private int mBoardSideSize;
     private int mInfoPanelWidth;
+    private FiveModel mFiveModel;
 
     public ServerWindow() {
         initModel();
         initLayout();
         initListener();
+        mTcpServer.startInNewThread(new FiveProtocol());
     }
 
     public void initLayout() {
@@ -38,14 +43,17 @@ public class ServerWindow extends JFrame {
         setTitle(Constants.APP.TITLE);
         pack();
         dynamicCalculateBoardSize();
-        setCenterDisplay();
+        ServerWindowMethods.setCenterDisplay(this, mWidth, mHeight);
         setPreferredSize(new Dimension(mWidth, mHeight));
 
         mFiveBoard = new FiveBoard(mBoardSideSize);
         mFiveBoard.setBounds(0, 0, mBoardSideSize, mBoardSideSize);
         content.add(mFiveBoard);
+        mFiveModel.setView(mFiveBoard);
+        mFiveBoard.setModel(mFiveModel);
 
-        mControlPanel = new ControlPanel(mInfoPanelWidth, mBoardSideSize, mTcpServer);
+        mControlPanel = ControlPanel.getInstance().init(mInfoPanelWidth, mBoardSideSize,
+                mTcpServer);
         mControlPanel.setBounds(mBoardSideSize, 0, mInfoPanelWidth, mBoardSideSize);
         content.add(mControlPanel);
         pack();
@@ -55,7 +63,9 @@ public class ServerWindow extends JFrame {
     public void initModel() {
         mPlayerNumber = FiveBoard.getPlayerNumber();
         mTcpServer = new TCPServer(mPlayerNumber);
-        mTcpServer.startInNewThread();
+        mFiveModel = new FiveModel();
+        Dispatcher.getInstance().setModel(mFiveModel);
+        Dispatcher.getInstance().setTCPServer(mTcpServer);
     }
 
     public void initListener() {
@@ -78,6 +88,7 @@ public class ServerWindow extends JFrame {
             public void onNextStep(int player) {
             }
         });
+        ServerWindowMethods.registerListenerForReleaseTCPResource(this, mTcpServer);
     }
 
     private void dynamicCalculateBoardSize() {
@@ -88,17 +99,6 @@ public class ServerWindow extends JFrame {
         mInfoPanelWidth = (int) (screenSize.height * INFO_PANEL_SCREEN_SIZE_RATIO);
         mHeight = mBoardSideSize + getInsets().top + getInsets().bottom;
         mWidth = mBoardSideSize + mInfoPanelWidth + getInsets().left + getInsets().right;
-    }
-
-    private void setCenterDisplay() {
-        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        if (mHeight > screenSize.height) {
-            mHeight = screenSize.height;
-        }
-        if (mWidth > screenSize.width) {
-            mWidth = screenSize.width;
-        }
-        this.setLocation((screenSize.width - mWidth) / 2, (screenSize.height - mHeight) / 2);
     }
 
     public static void main(String[] args) {
