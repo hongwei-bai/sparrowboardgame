@@ -7,6 +7,8 @@ import sparrow.util.Log;
 public class FiveJudgeMethods {
     final private static int NUMBER_GRID = FiveModel.NUMBER_GRID;
     final private static int STONE_NONE = FiveModel.STONE_NONE;
+    final private static int STONE_BLACK = FiveModel.STONE_BLACK;
+    final private static int STONE_WHITE = FiveModel.STONE_WHITE;
     final private static String[] CHAR_ARRAY = FiveBoard.CHAR_ARRAY;
 
     public static int countStoneInRow(int[][] board, int color, int x, int y) {
@@ -394,7 +396,10 @@ public class FiveJudgeMethods {
 
         boolean liveUp = isNonePoint(board, stoneUp) && !isSameColor(board, color, stoneUp2);
         boolean liveDown = isNonePoint(board, stoneDown) && !isSameColor(board, color, stoneDown2);
-        return liveUp || liveDown;
+        boolean deadUp = isBlocked(board, color, stoneUp);
+        boolean deadDown = isBlocked(board, color, stoneDown);
+
+        return (liveUp && deadDown) || (liveDown && deadUp);
     }
 
     private static boolean isStraightFourLive(int[][] board, int color, ArrayList<Stone> stones) {
@@ -427,6 +432,22 @@ public class FiveJudgeMethods {
             }
         }
         return false;
+    }
+
+    private static boolean isBlocked(int[][] board, int color, Stone stone) {
+        if (stone.p[0] < NUMBER_GRID && stone.p[1] < NUMBER_GRID && stone.p[0] >= 0
+                && stone.p[1] >= 0) {
+            if (board[stone.p[0]][stone.p[1]] == getOpponent(color)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int getOpponent(int color) {
+        return STONE_BLACK == color ? STONE_WHITE : STONE_BLACK;
     }
 
     private static Stone getAdjcentUpStone(ArrayList<Stone> sorted) {
