@@ -39,7 +39,7 @@ public class FiveJudge {
         list.addAll(FiveJudgeMethods.findStonesInClock2(board, color, x, y));
         list.addAll(FiveJudgeMethods.findStonesInClock4(board, color, x, y));
 
-        list = FiveJudgeMethods.findJumpFourInList(board, color, x, y, list);
+        list = FiveJudgeMethods.findJumpInList(board, color, x, y, list);
 
         ArrayList<Pattern> list4 = FiveJudgeMethods.filterLiveFour(board, color, list);
         ArrayList<Pattern> list3 = FiveJudgeMethods.filterLiveThree(board, color, list);

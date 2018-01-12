@@ -250,7 +250,7 @@ public class FiveJudgeMethods {
         return listPattern;
     }
 
-    public static ArrayList<Pattern> findJumpFourInList(int[][] board, int color, int x, int y,
+    public static ArrayList<Pattern> findJumpInList(int[][] board, int color, int x, int y,
             ArrayList<Pattern> list) {
         for (Pattern pattern : list) {
             if (pattern.pattern == Pattern.PATTERN_STRAIGHT && pattern.straight == 3) {
