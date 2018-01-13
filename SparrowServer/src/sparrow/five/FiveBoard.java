@@ -12,7 +12,7 @@ import sparrow.constants.Constants;
 import sparrow.model.Dispatcher;
 import sparrow.protocol.Protocol.MoveRecord;
 
-public class FiveBoard extends JPanel {
+public class FiveBoard extends JPanel implements FiveConstants {
     private static final long serialVersionUID = -224472017215121849L;
     private int mBoardSideSize = 0;
     private int mMarginTop = 0;
@@ -23,8 +23,6 @@ public class FiveBoard extends JPanel {
     private int mStoneDiameter = 0;
     private int mBoardDotDiameter = 0;
     private int mGridTextSize = 0;
-    public final static String[] CHAR_ARRAY = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-            "K", "L", "M", "N", "O" };
     private FiveModel mFiveModel;
 
     public FiveBoard(int height) {
@@ -71,17 +69,14 @@ public class FiveBoard extends JPanel {
 
                 int color;
                 boolean takeOverBlack = Dispatcher.PLAYER_STATE.TAKE_OVER == Dispatcher
-                        .getInstance()
-                        .getPlayerStatus(mFiveModel.getPlayerId(FiveModel.STONE_BLACK));
+                        .getInstance().getPlayerStatus(mFiveModel.getPlayerId(STONE_BLACK));
                 boolean takeOverWhite = Dispatcher.PLAYER_STATE.TAKE_OVER == Dispatcher
-                        .getInstance()
-                        .getPlayerStatus(mFiveModel.getPlayerId(FiveModel.STONE_WHITE));
+                        .getInstance().getPlayerStatus(mFiveModel.getPlayerId(STONE_WHITE));
 
-                if (takeOverBlack && mFiveModel.getNextMoveColor() == FiveModel.STONE_BLACK) {
-                    color = FiveModel.STONE_BLACK;
-                } else if (takeOverWhite
-                        && mFiveModel.getNextMoveColor() == FiveModel.STONE_WHITE) {
-                    color = FiveModel.STONE_WHITE;
+                if (takeOverBlack && mFiveModel.getNextMoveColor() == STONE_BLACK) {
+                    color = STONE_BLACK;
+                } else if (takeOverWhite && mFiveModel.getNextMoveColor() == STONE_WHITE) {
+                    color = STONE_WHITE;
                 } else {
                     return;
                 }
@@ -99,14 +94,14 @@ public class FiveBoard extends JPanel {
 
     private int[] judgePosition(int x, int y) {
         int xLeft = mGridSize >>> 1;
-        int xRight = (mGridSize >>> 1) + mGridSize * FiveModel.NUMBER_GRID;
+        int xRight = (mGridSize >>> 1) + mGridSize * NUMBER_GRID;
 
         int yTop = (mGridSize >>> 1) + mMarginTop;
-        int yBottom = (mGridSize >>> 1) + mMarginTop + mGridSize * FiveModel.NUMBER_GRID;
+        int yBottom = (mGridSize >>> 1) + mMarginTop + mGridSize * NUMBER_GRID;
 
         if (x > xLeft && x < xRight && y > yTop && y < yBottom) {
             int gridX = (x - xLeft) / mGridSize;
-            int gridY = FiveModel.NUMBER_GRID - (y - yTop) / mGridSize - 1;
+            int gridY = NUMBER_GRID - (y - yTop) / mGridSize - 1;
             int r[] = { gridX, gridY };
             return r;
         } else {
@@ -127,30 +122,30 @@ public class FiveBoard extends JPanel {
 
         g.setColor(Color.BLACK);
         int p1 = mGridSize;
-        int p2 = mGridSize * FiveModel.NUMBER_GRID;
-        for (int i = 0; i < FiveModel.NUMBER_GRID; i++) {
+        int p2 = mGridSize * NUMBER_GRID;
+        for (int i = 0; i < NUMBER_GRID; i++) {
             final int y = (1 + i) * mGridSize;
             g.drawLine(p1, y, p2, y);
         }
-        for (int i = 0; i < FiveModel.NUMBER_GRID; i++) {
+        for (int i = 0; i < NUMBER_GRID; i++) {
             final int x = (1 + i) * mGridSize;
             g.drawLine(x, p1, x, p2);
         }
 
-        final int pMid = mGridSize * ((FiveModel.NUMBER_GRID >>> 1) + 1);
+        final int pMid = mGridSize * ((NUMBER_GRID >>> 1) + 1);
         g.fillOval(pMid - mBoardDotDiameter / 2, pMid - mBoardDotDiameter / 2, mBoardDotDiameter,
                 mBoardDotDiameter);
 
         final int pTextLeft = p1 / 3;
         final int textOffset = mGridSize / 6;
-        for (int i = 0; i < FiveModel.NUMBER_GRID; i++) {
+        for (int i = 0; i < NUMBER_GRID; i++) {
             final int y = (1 + i) * mGridSize + textOffset;
             g.setFont(new Font(Constants.VIEW.BOARD_TEXT_FONT, Font.PLAIN, mGridTextSize));
             g.drawString((15 - i) + "", pTextLeft, y);
         }
 
         final int pTextBottom = p2 + p1 / 2;
-        for (int i = 0; i < FiveModel.NUMBER_GRID; i++) {
+        for (int i = 0; i < NUMBER_GRID; i++) {
             final int x = (1 + i) * mGridSize - textOffset;
             g.setFont(new Font(Constants.VIEW.BOARD_TEXT_FONT, Font.PLAIN, mGridTextSize));
             g.drawString(CHAR_ARRAY[i], x, pTextBottom);
@@ -160,11 +155,11 @@ public class FiveBoard extends JPanel {
     private void paintStones(Graphics g) {
         final int radius = mStoneDiameter >>> 1;
         final int[][] data = mFiveModel.get();
-        for (int row = 0; row < FiveModel.NUMBER_GRID; row++) {
-            for (int col = 0; col < FiveModel.NUMBER_GRID; col++) {
+        for (int row = 0; row < NUMBER_GRID; row++) {
+            for (int col = 0; col < NUMBER_GRID; col++) {
                 int color = data[col][row];
-                if (color > FiveModel.STONE_NONE) {
-                    g.setColor(color == FiveModel.STONE_BLACK ? Color.BLACK : Color.WHITE);
+                if (color > STONE_NONE) {
+                    g.setColor(color == STONE_BLACK ? Color.BLACK : Color.WHITE);
                     int x = getXPoint(col);
                     int y = getYPoint(row);
                     g.fillOval(x - radius, y - radius, mStoneDiameter, mStoneDiameter);
@@ -187,14 +182,14 @@ public class FiveBoard extends JPanel {
     }
 
     private int getYPoint(int y) {
-        int column = FiveModel.NUMBER_GRID - y - 1;
+        int column = NUMBER_GRID - y - 1;
         int pointY = column * mGridSize + mGridSize + mMarginTop;
         return pointY;
     }
 
     private void dynamicCalculateBoardSize(int height) {
-        mGridSize = height / (FiveModel.NUMBER_GRID + 1);
-        mBoardSideSize = mGridSize * (FiveModel.NUMBER_GRID + 1);
+        mGridSize = height / (NUMBER_GRID + 1);
+        mBoardSideSize = mGridSize * (NUMBER_GRID + 1);
         int Margin2 = height - mBoardSideSize;
         if (Margin2 % 2 == 1) {
             mMarginTop = Margin2 / 2;

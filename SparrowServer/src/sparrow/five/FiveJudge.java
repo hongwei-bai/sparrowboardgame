@@ -9,7 +9,7 @@ import sparrow.util.Log;
 public class FiveJudge {
     public static void judgeWin(FiveModel model, int[][] board, int color, int x, int y) {
         judgeWinFive(model, board, color, x, y);
-        if (FiveModel.STONE_BLACK == color) {
+        if (FiveConstants.STONE_BLACK == color) {
             judgeFouls(model, board, color, x, y);
         }
     }

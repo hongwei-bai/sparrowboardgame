@@ -121,6 +121,8 @@ public class Dispatcher {
                     }
 
                     if (!result) {
+                        mModel.notifyFoul(mModel.getColor(nextPlayerId),
+                                MultiLanguage.ERROR.PLAYER_MOVE_ERROR);
                         stopGame();
                         break;
                     }

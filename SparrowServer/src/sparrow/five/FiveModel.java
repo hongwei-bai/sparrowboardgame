@@ -2,11 +2,7 @@ package sparrow.five;
 
 import sparrow.model.ModelBase;
 
-public class FiveModel extends ModelBase {
-    public final static int NUMBER_GRID = 15;
-    public final static int STONE_NONE = 0;
-    public final static int STONE_BLACK = 1;
-    public final static int STONE_WHITE = 2;
+public class FiveModel extends ModelBase implements FiveConstants {
     private int[][] mGridData = new int[NUMBER_GRID][NUMBER_GRID];
     private boolean mNextMoveBlack = true;
     private FiveBoard mFiveBoard = null;

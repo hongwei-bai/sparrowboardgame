@@ -73,7 +73,7 @@ public class FiveJudgeMethods implements FiveConstants {
         return count;
     }
 
-    public static ArrayList<Pattern> findStonesInRow(int[][] board, int color, int x, int y) {
+    public static ArrayList<Pattern> findStonesInRow(int[][] board, int color) {
         ArrayList<Pattern> listPattern = new ArrayList<>();
 
         for (int row = 0; row < NUMBER_GRID; row++) {
@@ -83,7 +83,9 @@ public class FiveJudgeMethods implements FiveConstants {
                 if (color == data) {
                     count++;
                 } else {
-                    if (count == 4) {
+                    if (count >= 5) {
+                        listPattern.add(new Pattern(count, col, row, 1, 0));
+                    } else if (count == 4) {
                         listPattern.add(new Pattern(4, col, row, 1, 0));
                     } else if (count == 3) {
                         listPattern.add(new Pattern(3, col, row, 1, 0));
@@ -93,7 +95,9 @@ public class FiveJudgeMethods implements FiveConstants {
                     count = 0;
                 }
             }
-            if (count == 4) {
+            if (count >= 5) {
+                listPattern.add(new Pattern(count, NUMBER_GRID, row, 1, 0));
+            } else if (count == 4) {
                 listPattern.add(new Pattern(4, NUMBER_GRID, row, 1, 0));
             } else if (count == 3) {
                 listPattern.add(new Pattern(3, NUMBER_GRID, row, 1, 0));
@@ -103,7 +107,7 @@ public class FiveJudgeMethods implements FiveConstants {
         return listPattern;
     }
 
-    public static ArrayList<Pattern> findStonesInColumn(int[][] board, int color, int x, int y) {
+    public static ArrayList<Pattern> findStonesInColumn(int[][] board, int color) {
         ArrayList<Pattern> listPattern = new ArrayList<>();
 
         for (int col = 0; col < NUMBER_GRID; col++) {
@@ -113,7 +117,9 @@ public class FiveJudgeMethods implements FiveConstants {
                 if (color == data) {
                     count++;
                 } else {
-                    if (count == 4) {
+                    if (count >= 5) {
+                        listPattern.add(new Pattern(count, col, row, 0, 1));
+                    } else if (count == 4) {
                         listPattern.add(new Pattern(4, col, row, 0, 1));
                     } else if (count == 3) {
                         listPattern.add(new Pattern(3, col, row, 0, 1));
@@ -123,7 +129,9 @@ public class FiveJudgeMethods implements FiveConstants {
                     count = 0;
                 }
             }
-            if (count == 4) {
+            if (count >= 5) {
+                listPattern.add(new Pattern(count, col, NUMBER_GRID, 0, 1));
+            } else if (count == 4) {
                 listPattern.add(new Pattern(4, col, NUMBER_GRID, 0, 1));
             } else if (count == 3) {
                 listPattern.add(new Pattern(3, col, NUMBER_GRID, 0, 1));
@@ -133,7 +141,7 @@ public class FiveJudgeMethods implements FiveConstants {
         return listPattern;
     }
 
-    public static ArrayList<Pattern> findStonesInClock2(int[][] board, int color, int x, int y) {
+    public static ArrayList<Pattern> findStonesInClock2(int[][] board, int color) {
         ArrayList<Pattern> listPattern = new ArrayList<>();
 
         for (int colBase = 0; colBase < NUMBER_GRID; colBase++) {
@@ -144,7 +152,9 @@ public class FiveJudgeMethods implements FiveConstants {
                 if (color == data) {
                     count++;
                 } else {
-                    if (count == 4) {
+                    if (count >= 5) {
+                        listPattern.add(new Pattern(count, col, row, 1, 1));
+                    } else if (count == 4) {
                         listPattern.add(new Pattern(4, col, row, 1, 1));
                     } else if (count == 3) {
                         listPattern.add(new Pattern(3, col, row, 1, 1));
@@ -154,7 +164,9 @@ public class FiveJudgeMethods implements FiveConstants {
                     count = 0;
                 }
             }
-            if (count == 4) {
+            if (count >= 5) {
+                listPattern.add(new Pattern(count, col, row, 1, 1));
+            } else if (count == 4) {
                 listPattern.add(new Pattern(4, col, row, 1, 1));
             } else if (count == 3) {
                 listPattern.add(new Pattern(3, col, row, 1, 1));
@@ -169,7 +181,9 @@ public class FiveJudgeMethods implements FiveConstants {
                 if (color == data) {
                     count++;
                 } else {
-                    if (count == 4) {
+                    if (count >= 5) {
+                        listPattern.add(new Pattern(count, col, row, 1, 1));
+                    } else if (count == 4) {
                         listPattern.add(new Pattern(4, col, row, 1, 1));
                     } else if (count == 3) {
                         listPattern.add(new Pattern(3, col, row, 1, 1));
@@ -179,7 +193,9 @@ public class FiveJudgeMethods implements FiveConstants {
                     count = 0;
                 }
             }
-            if (count == 4) {
+            if (count >= 5) {
+                listPattern.add(new Pattern(count, col, row, 1, 1));
+            } else if (count == 4) {
                 listPattern.add(new Pattern(4, col, row, 1, 1));
             } else if (count == 3) {
                 listPattern.add(new Pattern(3, col, row, 1, 1));
@@ -189,7 +205,7 @@ public class FiveJudgeMethods implements FiveConstants {
         return listPattern;
     }
 
-    public static ArrayList<Pattern> findStonesInClock4(int[][] board, int color, int x, int y) {
+    public static ArrayList<Pattern> findStonesInClock4(int[][] board, int color) {
         ArrayList<Pattern> listPattern = new ArrayList<>();
 
         for (int colBase = 0; colBase < NUMBER_GRID; colBase++) {
@@ -201,7 +217,9 @@ public class FiveJudgeMethods implements FiveConstants {
                 if (color == data) {
                     count++;
                 } else {
-                    if (count == 4) {
+                    if (count >= 5) {
+                        listPattern.add(new Pattern(count, col, row, 1, -1));
+                    } else if (count == 4) {
                         listPattern.add(new Pattern(4, col, row, 1, -1));
                     } else if (count == 3) {
                         listPattern.add(new Pattern(3, col, row, 1, -1));
@@ -211,7 +229,9 @@ public class FiveJudgeMethods implements FiveConstants {
                     count = 0;
                 }
             }
-            if (count == 4) {
+            if (count >= 5) {
+                listPattern.add(new Pattern(count, col, row, 1, -1));
+            } else if (count == 4) {
                 listPattern.add(new Pattern(4, col, row, 1, -1));
             } else if (count == 3) {
                 listPattern.add(new Pattern(3, col, row, 1, -1));
@@ -226,7 +246,9 @@ public class FiveJudgeMethods implements FiveConstants {
                 if (color == data) {
                     count++;
                 } else {
-                    if (count == 4) {
+                    if (count >= 5) {
+                        listPattern.add(new Pattern(count, col, row, 1, -1));
+                    } else if (count == 4) {
                         listPattern.add(new Pattern(4, col, row, 1, -1));
                     } else if (count == 3) {
                         listPattern.add(new Pattern(3, col, row, 1, -1));
@@ -236,7 +258,9 @@ public class FiveJudgeMethods implements FiveConstants {
                     count = 0;
                 }
             }
-            if (count == 4) {
+            if (count >= 5) {
+                listPattern.add(new Pattern(count, col, row, 1, -1));
+            } else if (count == 4) {
                 listPattern.add(new Pattern(4, col, row, 1, -1));
             } else if (count == 3) {
                 listPattern.add(new Pattern(3, col, row, 1, -1));
@@ -246,7 +270,7 @@ public class FiveJudgeMethods implements FiveConstants {
         return listPattern;
     }
 
-    public static ArrayList<Pattern> findJumpInList(int[][] board, int color, int x, int y,
+    public static ArrayList<Pattern> findJumpInList(int[][] board, int color,
             ArrayList<Pattern> list) {
         for (Pattern pattern : list) {
             if (pattern.pattern == Pattern.PATTERN_STRAIGHT && pattern.straight == 3) {
@@ -278,11 +302,22 @@ public class FiveJudgeMethods implements FiveConstants {
         return list;
     }
 
+    public static ArrayList<Pattern> filterRushFour(int[][] board, int color,
+            ArrayList<Pattern> list) {
+        ArrayList<Pattern> listFilter = new ArrayList<>();
+        for (Pattern pattern : list) {
+            if (isRushFour(board, color, pattern.stones)) {
+                listFilter.add(pattern);
+            }
+        }
+        return listFilter;
+    }
+
     public static ArrayList<Pattern> filterLiveFour(int[][] board, int color,
             ArrayList<Pattern> list) {
         ArrayList<Pattern> listFilter = new ArrayList<>();
         for (Pattern pattern : list) {
-            if (isFourRush(board, color, pattern.stones)) {
+            if (isLiveFour(board, color, pattern.stones)) {
                 listFilter.add(pattern);
             }
         }
@@ -345,7 +380,7 @@ public class FiveJudgeMethods implements FiveConstants {
             return false;
         }
 
-        Log.d(Pattern.stonesToString(stones));
+        // Log.d(Pattern.stonesToString(stones));
         if (isContinuous(stones)) {
             Stone stoneUp = getAdjcentUpStone(stones);
             ArrayList<Stone> stonePlusUp = new ArrayList<>();
@@ -371,13 +406,24 @@ public class FiveJudgeMethods implements FiveConstants {
         }
     }
 
-    private static boolean isFourRush(int[][] board, int color, ArrayList<Stone> stones) {
+    private static boolean isRushFour(int[][] board, int color, ArrayList<Stone> stones) {
         if (stones.size() != 4) {
             return false;
         }
 
         if (isContinuous(stones)) {
             return isStraightFourRush(board, color, stones);
+        }
+        return true;
+    }
+
+    private static boolean isLiveFour(int[][] board, int color, ArrayList<Stone> stones) {
+        if (stones.size() != 4) {
+            return false;
+        }
+
+        if (isContinuous(stones)) {
+            return isStraightFourLive(board, color, stones);
         }
         return true;
     }

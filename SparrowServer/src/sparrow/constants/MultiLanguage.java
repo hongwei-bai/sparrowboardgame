@@ -2,40 +2,41 @@ package sparrow.constants;
 
 public class MultiLanguage {
     public interface ERROR {
-        public static final String CLIENT_NUMBER_OVERFLOW = "Client number exceed.";
+        final public static String CLIENT_NUMBER_OVERFLOW = "Client number exceed.";
+        final public static String PLAYER_MOVE_ERROR = "Player move error.";
     }
 
     public interface BUTTON {
-        public static final String TAKE_OVER = "TakeOver";
-        public static final String PAUSE = "||";
-        public static final String RESUME = "|>";
-        public static final String NEXT_STEP = ">";
+        final public static String TAKE_OVER = "TakeOver";
+        final public static String PAUSE = "||";
+        final public static String RESUME = "|>";
+        final public static String NEXT_STEP = ">";
     }
 
     public interface GAME_STATUS {
-        public static final String GAME_PRE = "Game ";
-        public static final String READY = "Ready";
-        public static final String STARTED = "Started";
-        public static final String CLIENT_ERROR = "Client Error!";
-        public static final String GAME_OVER = "Over";
-        public static final String WIN = " Win!";
-        public static final String LOSE = " Lose.";
+        final public static String GAME_PRE = "Game ";
+        final public static String READY = "Ready";
+        final public static String STARTED = "Started";
+        final public static String CLIENT_ERROR = "Client Error!";
+        final public static String GAME_OVER = "Over";
+        final public static String WIN = " Win!";
+        final public static String LOSE = " Lose.";
     }
 
     public interface PLAYER_STATUS {
-        public static final String PLAYER_PRE = "Player #";
-        public static final String WAITING = " is waiting...";
-        public static final String CONNECTED = " connected.";
-        public static final String DISCONNECTED = " disconnected.";
-        public static final String TAKE_OVER = " is taken over.";
+        final public static String PLAYER_PRE = "Player #";
+        final public static String WAITING = " is waiting...";
+        final public static String CONNECTED = " connected.";
+        final public static String DISCONNECTED = " disconnected.";
+        final public static String TAKE_OVER = " is taken over.";
     }
 
     public interface FIVE {
-        public static final String FOUL_LONG = "长连禁手";
-        public static final String FOUL_THREE_THREE = "三三禁手";
-        public static final String FOUL_FOUR_FOUR = "四四禁手";
-        public static final String WIN_FIVE = "五连胜";
-        public static final String WIN_FOUR = "四连胜";
+        final public static String FOUL_LONG = "长连禁手";
+        final public static String FOUL_THREE_THREE = "三三禁手";
+        final public static String FOUL_FOUR_FOUR = "四四禁手";
+        final public static String WIN_FIVE = "五连胜";
+        final public static String WIN_FOUR = "四连胜";
     }
 
 }
