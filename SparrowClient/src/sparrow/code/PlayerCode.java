@@ -9,11 +9,15 @@ import sparrow.platform.PlayerInterface;
 public class PlayerCode implements PlayerInterface {
     final private int INFINITY = 20000;
     private int[] mMove = new int[2];
+
+    /* Depth less than 5 is not meaningful */
+    /* 3-level-search is able to deal with rush four and jump four */
+    /* 5-level-search is able to deal with live three */
     private int MAX_DEPTH = 5;
 
     @Override
     public String getPlayerName() {
-        return "Simple Negamax-AlphaBeta";
+        return "Simple-Negamax-AlphaBeta";
     }
 
     @Override
@@ -28,16 +32,25 @@ public class PlayerCode implements PlayerInterface {
         return mMove;
     }
 
+    private static int debugCount = 0;
+
     private int alphabeta(int color, int[][] board, int depth, int alpha, int beta) {
-        int e = evaluate(color, board);
-        if (e == INFINITY) {
-            return INFINITY - (20 - depth);
-        }
-        if (e == -INFINITY) {
-            return -INFINITY + (20 - depth);
-        }
-        if (depth <= 0) {
-            return e;
+        if (depth < MAX_DEPTH) {
+            int e = evaluate(color, board);
+            if (e == INFINITY) {
+                if (debugCount++ == 0) {
+                    printBoard(board);
+                }
+                return INFINITY - (20 - depth);
+            }
+
+            if (e == -INFINITY) {
+                return -INFINITY + (20 - depth);
+            }
+
+            if (depth <= 0) {
+                return e;
+            }
         }
 
         ArrayList<Move> movelist = generateMoves(board);
@@ -45,7 +58,7 @@ public class PlayerCode implements PlayerInterface {
 
             makeMove(board, m.x, m.y, color);
             int score = -alphabeta(getOpponent(color), board, depth - 1, -beta, -alpha);
-            UnMakeMove(board, m.x, m.y);
+            unMakeMove(board, m.x, m.y);
 
             if (score > alpha) {
                 alpha = score;
@@ -59,14 +72,13 @@ public class PlayerCode implements PlayerInterface {
             }
         }
         return alpha;
-
     }
 
     private void makeMove(int[][] board, int x, int y, int color) {
         board[x][y] = color;
     }
 
-    private void UnMakeMove(int[][] board, int x, int y) {
+    private void unMakeMove(int[][] board, int x, int y) {
         board[x][y] = 0;
     }
 
@@ -97,13 +109,13 @@ public class PlayerCode implements PlayerInterface {
             }
         }
 
-        int startx = Math.max(0, minx - 2);
-        int endx = Math.min(15, maxx + 2);
-        int starty = Math.max(0, miny - 2);
-        int endy = Math.min(15, maxy + 2);
+        int x0 = Math.max(0, minx - 2);
+        int x1 = Math.min(15, maxx + 2);
+        int y0 = Math.max(0, miny - 2);
+        int y1 = Math.min(15, maxy + 2);
 
-        for (int x = startx; x < endx; x++) {
-            for (int y = starty; y < endy; y++) {
+        for (int x = x0; x < x1; x++) {
+            for (int y = y0; y < y1; y++) {
                 if (0 == board[x][y]) {
                     list.add(new Move(x, y));
                 }
@@ -138,19 +150,26 @@ public class PlayerCode implements PlayerInterface {
                 } else {
                     return INFINITY;
                 }
-            } else if (pattern.straight == 4 && pattern.pattern == Pattern.PATTERN_STRAIGHT) {
-                e += 60;
-            } else if (pattern.straight == 4 && pattern.pattern == Pattern.PATTERN_JUMP) {
-                e += 60;
-            } else if (pattern.straight == 3 && pattern.pattern == Pattern.PATTERN_STRAIGHT) {
-                e += 40;
-            } else if (pattern.straight == 3 && pattern.pattern == Pattern.PATTERN_JUMP) {
-                e += 30;
-            } else if (pattern.straight == 2 && pattern.pattern == Pattern.PATTERN_STRAIGHT) {
-                e += 10;
-            } else if (pattern.straight == 2 && pattern.pattern == Pattern.PATTERN_JUMP) {
-                e += 5;
             }
+            // else if (pattern.straight == 4 && pattern.pattern ==
+            // Pattern.PATTERN_STRAIGHT) {
+            // e += 60;
+            // } else if (pattern.straight == 4 && pattern.pattern ==
+            // Pattern.PATTERN_JUMP) {
+            // e += 60;
+            // } else if (pattern.straight == 3 && pattern.pattern ==
+            // Pattern.PATTERN_STRAIGHT) {
+            // e += 40;
+            // } else if (pattern.straight == 3 && pattern.pattern ==
+            // Pattern.PATTERN_JUMP) {
+            // e += 30;
+            // } else if (pattern.straight == 2 && pattern.pattern ==
+            // Pattern.PATTERN_STRAIGHT) {
+            // e += 10;
+            // } else if (pattern.straight == 2 && pattern.pattern ==
+            // Pattern.PATTERN_JUMP) {
+            // e += 5;
+            // }
         }
 
         // list = FiveJudgeMethods.findJumpInList(board, color, list);
@@ -192,22 +211,20 @@ public class PlayerCode implements PlayerInterface {
         mMove[1] = 7;
     }
 
-    @SuppressWarnings("unused")
-    private void printBoard(int[][] board) {
-        for (int i = 0; i < 15; i++) {
+    public static void printBoard(int[][] board) {
+        for (int i = 14; i >= 0; i--) {
             for (int j = 0; j < 15; j++) {
-                if (board[i][j] > 0) {
-                    System.out.print(board[i][j] == 1 ? "*" : "o");
+                if (board[j][i] > 0) {
+                    System.out.print(board[j][i] == 1 ? "*" : "o");
                 } else {
-                    System.out.println("-");
+                    System.out.print("-");
                 }
             }
             System.out.println("");
         }
     }
 
-    @SuppressWarnings("unused")
-    private static int[][] WEIGHT = { { 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0 },
+    public static int[][] WEIGHT = { { 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0 },
             { 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1 },
             { 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2 },
             { 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3 },
