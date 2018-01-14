@@ -17,7 +17,7 @@ public class PlayerCode implements PlayerInterface {
 
     @Override
     public String getPlayerName() {
-        return "Simple-Negamax-AlphaBeta";
+        return "SNAB.Java";// Simple-Negamax-AlphaBeta
     }
 
     @Override

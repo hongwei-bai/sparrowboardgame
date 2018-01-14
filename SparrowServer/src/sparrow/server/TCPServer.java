@@ -13,6 +13,7 @@ import sparrow.constants.MultiLanguage;
 import sparrow.model.ModelBase.MoveData;
 import sparrow.protocol.Protocol;
 import sparrow.protocol.Protocol.MoveRecord;
+import sparrow.util.Log;
 import sparrow.protocol.ProtocolParser;
 import sparrow.view.ControlPanel;
 
