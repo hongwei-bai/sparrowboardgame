@@ -66,4 +66,11 @@ public class FiveModel extends ModelBase implements FiveConstants {
         return color == STONE_BLACK ? "Black" : "White";
     }
 
+    @Override
+    public String getMoveDescription(int[] from, int[] to) {
+        String xString = CHAR_ARRAY[to[0]];
+        int yStringInt = to[1] + 1;
+        return xString + yStringInt;
+    }
+
 }

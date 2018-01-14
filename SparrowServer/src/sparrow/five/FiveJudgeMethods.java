@@ -345,7 +345,6 @@ public class FiveJudgeMethods implements FiveConstants {
             return false;
         }
 
-        Log.d(Pattern.stonesToString(stones));
         if (isContinuous(stones)) {
             Stone stoneUp = getAdjcentUpStone(stones);
             ArrayList<Stone> stonePlusUp = new ArrayList<>();

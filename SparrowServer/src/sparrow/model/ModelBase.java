@@ -78,6 +78,12 @@ abstract public class ModelBase {
 
     abstract public String getColorDescription(int color);
 
+    abstract public String getMoveDescription(int[] from, int[] to);
+
+    public String getMoveDescription(int[] to) {
+        return getMoveDescription(null, to);
+    }
+
     public static class MoveData {
         public int id;
         public int[] from;

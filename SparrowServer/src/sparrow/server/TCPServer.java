@@ -13,7 +13,6 @@ import sparrow.constants.MultiLanguage;
 import sparrow.model.ModelBase.MoveData;
 import sparrow.protocol.Protocol;
 import sparrow.protocol.Protocol.MoveRecord;
-import sparrow.util.Log;
 import sparrow.protocol.ProtocolParser;
 import sparrow.view.ControlPanel;
 
@@ -77,8 +76,9 @@ public class TCPServer {
                 int index = allocateClientThread();
                 if (index != ERROR) {
                     mClientSockets[index] = socket;
-                    processConnectRespond(index);
-                    ControlPanel.postMessage("Client " + index + " connected.");
+                    String playerName = processConnectRespond(index);
+                    ControlPanel.postMessage(MultiLanguage.PLAYER_STATUS.PLAYER_PRE + index + "("
+                            + playerName + ") " + MultiLanguage.PLAYER_STATUS.JOIN);
                 } else {
                     ControlPanel.postMessage(MultiLanguage.ERROR.CLIENT_NUMBER_OVERFLOW);
                 }
@@ -94,7 +94,7 @@ public class TCPServer {
         mGameStart = true;
     }
 
-    private void processConnectRespond(int clientId) {
+    private String processConnectRespond(int clientId) {
         while (true) {
             try {
                 mBufferedReaders[clientId] = new BufferedReader(
@@ -108,7 +108,7 @@ public class TCPServer {
                     if (mClientObserver != null) {
                         mClientObserver.onClientConnected(clientId, playerName);
                     }
-                    return;
+                    return playerName;
                 }
             } catch (IOException e) {
                 if (e.getMessage().equals(Constants.TCP.TCP_RESET_ERROR_STRING)) {
@@ -116,7 +116,7 @@ public class TCPServer {
                         mClientObserver.onClientDisconnected(clientId);
                     }
                     releaseClientResource(clientId);
-                    return;
+                    return "";
                 }
                 e.printStackTrace();
             }
@@ -133,8 +133,6 @@ public class TCPServer {
             mBufferedWriters[clientId].flush();
 
             String message = mBufferedReaders[clientId].readLine();
-            ControlPanel.postMessage(
-                    "rcv msg from [" + clientId + "]" + mClientNames[clientId] + ": " + message);
             if (mProtocolParser.getMessageId(message).equals(Protocol.MSGID.MOVE)) {
                 int[] move = mProtocolParser
                         .parseMove(mProtocolParser.getValue(message, Protocol.KEY.MOVE));

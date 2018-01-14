@@ -85,7 +85,7 @@ public class FiveBoard extends JPanel implements FiveConstants {
                 if (point != null) {
                     boolean result = mFiveModel.move(color, point);
                     if (result) {
-                        Dispatcher.getInstance().notifyMouseEvent();
+                        Dispatcher.getInstance().notifyMouseEvent(point);
                     }
                 }
             }

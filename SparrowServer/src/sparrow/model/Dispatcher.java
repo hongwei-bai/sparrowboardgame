@@ -17,6 +17,7 @@ public class Dispatcher {
     final private Object MOUSE_EVENT_LOCK = new Object();
     private int mConnectedPlayerCount = 0;
     private boolean mGameRunning = true;
+    private int[] mThisRoundMove;
 
     public interface PLAYER_STATE {
         public int AI = 0;
@@ -115,8 +116,11 @@ public class Dispatcher {
                                 mModel.getMoveSN(), mModel.getColor(nextPlayerId),
                                 mModel.getBoard(), mModel.getPreviousMove());
                         result = mModel.move(mModel.getColor(nextPlayerId), md.to);
+                        mThisRoundMove = md.to;
+                        postMoveMessage(nextPlayerId);
                     } else if (PLAYER_STATE.TAKE_OVER == getPlayerStatus(nextPlayerId)) {
                         lockMouseEvent();
+                        postMoveMessage(nextPlayerId);
                         continue;
                     }
 
@@ -133,6 +137,19 @@ public class Dispatcher {
         mDispatchThread.start();
     }
 
+    private void postMoveMessage(int playerId) {
+        String moveMessage = "";
+        moveMessage += MultiLanguage.PLAYER_STATUS.PLAYER_PRE + playerId;
+        String playerName = mTcpServer.getClientName(playerId);
+        if (playerName != null) {
+            moveMessage += "(" + mTcpServer.getClientName(playerId) + ")";
+        }
+        moveMessage += Dispatcher.getInstance().getModel()
+                .getColorDescription(mModel.getColor(playerId)) + MultiLanguage.PLAYER_STATUS.MOVE
+                + Dispatcher.getInstance().getModel().getMoveDescription(mThisRoundMove);
+        ControlPanel.postMessage(moveMessage);
+    }
+
     private void lockMouseEvent() {
         try {
             synchronized (MOUSE_EVENT_LOCK) {
@@ -143,7 +160,8 @@ public class Dispatcher {
         }
     }
 
-    public void notifyMouseEvent() {
+    public void notifyMouseEvent(int[] move) {
+        mThisRoundMove = move;
         synchronized (MOUSE_EVENT_LOCK) {
             MOUSE_EVENT_LOCK.notify();
         }

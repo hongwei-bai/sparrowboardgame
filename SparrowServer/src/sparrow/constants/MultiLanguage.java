@@ -29,6 +29,8 @@ public class MultiLanguage {
         final public static String CONNECTED = " connected.";
         final public static String DISCONNECTED = " disconnected.";
         final public static String TAKE_OVER = " is taken over.";
+        final public static String JOIN = " joined.";
+        final public static String MOVE = " moved ";
     }
 
     public interface FIVE {
